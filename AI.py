@@ -4,7 +4,6 @@ import threading
 from md2tgmd import escape
 from runasync import run_async
 from config import API, NICK, COOKIES
-from revChatGPT.V3 import Chatbot as GPT
 from telegram.constants import ChatAction
 from EdgeGPT import Chatbot as BingAI, ConversationStyle
 
@@ -24,8 +23,6 @@ class AIBot:
                 print("error", e)
                 print('\033[0m')
                 self.bingcookie = None
-        if API:
-            self.ChatGPTbot = GPT(api_key=f"{API}")
 
         self.botNick = NICK.lower() if NICK else None
         self.botNicKLength = len(self.botNick) if self.botNick else 0
@@ -108,8 +105,7 @@ class AIBot:
         print("\033[32m", update.effective_user.username, update.effective_user.id, update.message.text, "\033[0m")
         chat_content = update.message.text if NICK is None else update.message.text[self.botNicKLength:].strip() if update.message.text[:self.botNicKLength].lower() == self.botNick else None
         if self.bingcookie and chat_content:
-            _thread = threading.Thread(target=run_async, args=(self.getBing(chat_content, update, context),))
-            _thread.start()
+            await self.getBing(chat_content, update, context)
         if API and chat_content:
             await self.getChatGPT(chat_content, update, context)
 
