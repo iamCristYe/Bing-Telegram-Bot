@@ -25,7 +25,8 @@ class AIBot:
 
     async def getBing(self, message, update, context):
         result = ""
-
+        with open("log.txt", "a") as log:
+            log.write(message)
         try:
             result = await self.botBing.ask(
                 prompt=message, conversation_style=self.conversationStyle
@@ -48,11 +49,14 @@ class AIBot:
             result = "Something went wrong."
             await self.botBing.reset()
         result = re.sub(r"\[\^\d+\^\]", "", result)
-        print(f"{result} ({numMessages}/{maxNumMessages})")
+        toSend = f"{result} ({numMessages}/{maxNumMessages})"
+        print(toSend)
+        with open("log.txt", "a") as log:
+            log.write(toSend)
 
         message = await context.bot.send_message(
             chat_id=update.message.chat_id,
-            text=escape(f"{result} ({numMessages}/{maxNumMessages})"),
+            text=escape(toSend),
             parse_mode="MarkdownV2",
             reply_to_message_id=update.message.message_id,
         )
