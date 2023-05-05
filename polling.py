@@ -38,8 +38,14 @@ async def main():
 
     import os
 
-    PROXY = "http://192.168.1.8:7890"
+    import socket
 
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    s.connect(("captive.apple.com", 80))
+    address = s.getsockname()[0]
+    PROXY = f"http://{address}:7890"
+    print(PROXY)
     os.environ["ALL_PROXY"] = PROXY
     os.environ["HTTP_PROXY"] = PROXY
     os.environ["HTTPS_PROXY"] = PROXY
