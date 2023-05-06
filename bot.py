@@ -17,32 +17,39 @@ logger = logging.getLogger()
 async def start(update, context):  # 当用户输入/start时，返回文本
     user = update.effective_user
     message = "Hi"
-    await update.message.reply_html(
-        rf"Hi {user.mention_html()}! Ask me for Bing.",
-    )
+    try:
+        await update.message.reply_html(
+            rf"Hi {user.mention_html()}! Ask me for Bing.",
+        )
+    except:
+        pass
     # await update.message.reply_text(escape(message), parse_mode='MarkdownV2')
 
 
 async def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
-    await context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text="Something went wrong.",
-        parse_mode="MarkdownV2",
-    )
+    try:
+        await context.bot.send_message(
+            chat_id=update.message.chat_id,
+            text="Something went wrong.",
+            parse_mode="MarkdownV2",
+        )
+    except:
+        pass
 
 
 async def unknown(update, context):  # 当用户输入未知命令时，返回文本
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="Sorry, I didn't understand that command.",
-    )
+    try:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Sorry, I didn't understand that command.",
+        )
+    except:
+        pass
 
 
 def setup(token):
-
     application = ApplicationBuilder().token(token).build()
-
     return application
 
 

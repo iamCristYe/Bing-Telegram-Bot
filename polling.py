@@ -36,31 +36,34 @@ import asyncio
 async def main():
     # print("done!")
 
-    import os
+    try:
+        import os
 
-    import socket
+        import socket
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.settimeout(0)
-    s.connect(("captive.apple.com", 80))
-    address = s.getsockname()[0]
-    PROXY = f"http://{address}:7890"
-    print(PROXY)
-    os.environ["ALL_PROXY"] = PROXY
-    os.environ["HTTP_PROXY"] = PROXY
-    os.environ["HTTPS_PROXY"] = PROXY
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0)
+        s.connect(("captive.apple.com", 80))
+        address = s.getsockname()[0]
+        PROXY = f"http://{address}:7890"
+        print(PROXY)
+        os.environ["ALL_PROXY"] = PROXY
+        os.environ["HTTP_PROXY"] = PROXY
+        os.environ["HTTPS_PROXY"] = PROXY
 
-    # run_async(configure_webhook())
-    # echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), respond)
+        # run_async(configure_webhook())
+        # echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), respond)
 
-    # application.add_handler(start_handler)
-    # application.add_handler(echo_handler)
-    # update = telegram.Update.de_json(request.get_json(force=True), application.bot)
-    application = setup(BOT_TOKEN)
-    await addHandler(application)
-    await application.initialize()
-    # application.process_update(update)
-    await application.run_polling()
+        # application.add_handler(start_handler)
+        # application.add_handler(echo_handler)
+        # update = telegram.Update.de_json(request.get_json(force=True), application.bot)
+        application = setup(BOT_TOKEN)
+        await addHandler(application)
+        await application.initialize()
+        # application.process_update(update)
+        await application.run_polling()
+    except:
+        main()
 
 
 import nest_asyncio
