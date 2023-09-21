@@ -1,4 +1,5 @@
 pytz
+flask
 EdgeGPT
 waitress
 nest-asyncio

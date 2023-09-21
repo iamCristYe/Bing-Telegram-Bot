@@ -5,7 +5,7 @@ from md2tgmd import escape
 
 from secret import COOKIES
 from telegram.constants import ChatAction
-from EdgeGPT import Chatbot, ConversationStyle
+from EdgeGPT.EdgeGPT import Chatbot, ConversationStyle
 
 
 class AIBot:
@@ -15,7 +15,13 @@ class AIBot:
 
         if self.cookiesBing:
             try:
-                self.botBing = Chatbot(cookies=json.loads(self.cookiesBing))
+                print(json.loads(self.cookiesBing))
+                # self.botBing = Chatbot(cookies=json.loads(self.cookiesBing))
+                f = open('bing_cookies_*.json')
+                cookie_current=json.load(f)
+                f.close()
+                print(cookie_current)
+                self.botBing = Chatbot(cookies=cookie_current)
             except Exception as e:
                 print("\033[31m")
                 print("Please check cookies!")
@@ -24,9 +30,7 @@ class AIBot:
                 self.cookiesBing = None
 
     async def getBing(self, message, update, context):
-        result = ""
-        with open("log.txt", "a") as log:
-            log.write(message)
+        result = "Something went wrong."
         try:
             result = await self.botBing.ask(
                 prompt=message, conversation_style=self.conversationStyle
@@ -62,22 +66,20 @@ class AIBot:
         )
 
     async def getResult(self, update, context):
-        await context.bot.send_chat_action(
-            chat_id=update.message.chat_id, action=ChatAction.TYPING
-        )
         print(
             "\033[32m",
-            update.effective_user.username,
             update.effective_user.id,
             update.message.text,
             "\033[0m",
         )
+
+        # with open("log.txt", "a") as log:
+        #     log.write(f"\n{update.effective_user.id}:{update.message.text}\n")
         chat_content = update.message.text
         if self.cookiesBing and chat_content:
             await self.getBing(chat_content, update, context)
 
     async def reset_chat(self, update, context):
-
         await self.botBing.reset()
         await context.bot.send_message(
             chat_id=update.message.chat_id,
